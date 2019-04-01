@@ -1,0 +1,6 @@
+{
+		"testCase": "TestEmployeeEngagementSurveyPrice_25Employees",
+		"noOfEmployees": 1000,
+		"enableEmployeeEngagementSurvey": true,
+		"expected_AnnualSubscriptionQuote": "$27,953"
+}

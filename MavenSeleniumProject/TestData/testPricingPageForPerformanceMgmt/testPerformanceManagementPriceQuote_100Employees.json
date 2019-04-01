@@ -1,0 +1,6 @@
+{
+		"testCase": "TestPerformanceManagementPrice_100Employees",
+		"noOfEmployees": 100,
+		"enablePerformanceManagement": true,
+		"expected_AnnualSubscriptionQuote": "$7,753"
+}

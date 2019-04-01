@@ -1,0 +1,5 @@
+{
+		"testCase": "TestApplicantTrackingPrice_500Employees",
+		"noOfEmployees": 500,
+		"expected_AnnualSubscriptionQuote": "$20,388"
+}
