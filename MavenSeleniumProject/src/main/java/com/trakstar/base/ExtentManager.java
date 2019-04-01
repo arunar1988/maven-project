@@ -2,6 +2,9 @@ package com.trakstar.base;
 
 import java.io.File;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import com.aventstack.extentreports.reporter.configuration.ChartLocation;
@@ -13,6 +16,8 @@ public class ExtentManager {
 	private static String fileSeperator = System.getProperty("file.separator");
 	private static String reportFilepath = System.getProperty("user.dir") + fileSeperator + "TestReport";
 	private static String reportFileLocation = reportFilepath + fileSeperator + reportFileName;
+
+	private static final Logger log = LogManager.getLogger(ExtentManager.class);
 
 	public static ExtentReports getInstance() {
 		if (extent == null)
@@ -47,14 +52,14 @@ public class ExtentManager {
 		File testDirectory = new File(path);
 		if (!testDirectory.exists()) {
 			if (testDirectory.mkdir()) {
-				System.out.println("Directory: " + path + " is created!");
+				log.info("Directory: " + path + " is created!");
 				return reportFileLocation;
 			} else {
-				System.out.println("Failed to create directory: " + path);
+				log.debug("Failed to create directory: " + path);
 				return System.getProperty("user.dir");
 			}
 		} else {
-			System.out.println("Directory already exists: " + path);
+			log.info("Directory already exists: " + path);
 		}
 		return reportFileLocation;
 	}

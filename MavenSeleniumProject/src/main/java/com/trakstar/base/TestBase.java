@@ -35,7 +35,8 @@ public class TestBase implements ITest {
 
 	private WebDriver driver;
 
-	private static final Logger Log = LogManager.getLogger(TestBase.class);
+	private static final Logger log = LogManager.getLogger(TestBase.class);
+	
 	private static final String TEST_DIRECTORY = "TestData";
 	private static final String DRIVER_DIRECTORY = "Drivers";
 
@@ -52,26 +53,26 @@ public class TestBase implements ITest {
 			driver = initFirefoxDriver(appURL);
 			break;
 		default:
-			System.out.println("browser : " + browserType + " is invalid, Launching Firefox as browser of choice..");
+			log.info("browser : " + browserType + " is invalid, Launching Firefox as browser of choice..");
 			driver = initFirefoxDriver(appURL);
 		}
 	}
 
 	private static WebDriver initChromeDriver(String appURL) throws IOException {
-		System.out.println("Launching google chrome with new profile..");
+		log.info("Launching google chrome with new profile..");
 		String path = new File(".").getCanonicalPath();
 		System.setProperty("webdriver.chrome.driver",
 				path + IOUtils.DIR_SEPARATOR + DRIVER_DIRECTORY + IOUtils.DIR_SEPARATOR + "chromedriver");
-		System.out.println("Successfully set chrome driver property");
+		log.info("Successfully set chrome driver property");
 		WebDriver driver = new ChromeDriver();
 		driver.manage().window().maximize();
 		driver.navigate().to(appURL);
-		System.out.println("AppUrl: " + appURL);
+		log.info("AppUrl: " + appURL);
 		return driver;
 	}
 
 	private static WebDriver initFirefoxDriver(String appURL) {
-		System.out.println("Launching Firefox browser..");
+		log.info("Launching Firefox browser..");
 		WebDriver driver = new FirefoxDriver();
 		driver.manage().window().maximize();
 		driver.navigate().to(appURL);
@@ -85,7 +86,7 @@ public class TestBase implements ITest {
 			setDriver(browserType, appURL);
 
 		} catch (Exception e) {
-			System.out.println("Error....." + e.getStackTrace());
+			log.info("Error....." + e.getStackTrace());
 		}
 	}
 
@@ -103,7 +104,7 @@ public class TestBase implements ITest {
 	private Collection<File> getTestDataFiles(String testDir) throws IOException {
 		String path = new File(".").getCanonicalPath();
 		File directory = new File(path + IOUtils.DIR_SEPARATOR + TEST_DIRECTORY + IOUtils.DIR_SEPARATOR + testDir);
-		Log.info("Looking for test files at {}", directory);
+		log.info("Looking for test files at {}", directory);
 		if (directory.exists() && directory.isDirectory()) {
 			return FileUtils.listFiles(directory, null, true);
 		}
@@ -115,7 +116,7 @@ public class TestBase implements ITest {
 	@JsonDeserialize
 	public Iterator<Object[]> testDataProvider(Method m) throws IOException {
 		Collection<File> testDataFiles = getTestDataFiles(m.getName());
-		Log.info("Found the following testFiles: {}", testDataFiles);
+		log.info("Found the following testFiles: {}", testDataFiles);
 		ImmutableList.Builder<Object[]> dataBuilder = ImmutableList.builder();
 		for (File testFile : testDataFiles) {
 			try {
@@ -124,7 +125,7 @@ public class TestBase implements ITest {
 				dataBuilder.add(new Object[] { testDocument });
 
 			} catch (Exception e) {
-				Log.error("", e);
+				log.error("", e);
 			}
 
 		}
