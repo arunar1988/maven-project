@@ -27,25 +27,23 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.collect.ImmutableList;
 import com.trakstar.testdata.model.TestDocument;
 
-
-
-public class TestBase implements ITest{
+public class TestBase implements ITest {
 
 	private static ObjectMapper mapper = new ObjectMapper();
 
 	private Queue<TestDocument> testDocQueue = new LinkedList<TestDocument>();
-	
+
+	private WebDriver driver;
+
 	private static final Logger Log = LogManager.getLogger(TestBase.class);
 	private static final String TEST_DIRECTORY = "TestData";
-	
-	private WebDriver driver;
-	private static String driverPath = "/Users/arunarajendran/Desktop/Drivers/";
+	private static final String DRIVER_DIRECTORY = "Drivers";
 
 	public WebDriver getDriver() {
 		return driver;
 	}
 
-	private void setDriver(String browserType, String appURL) {
+	private void setDriver(String browserType, String appURL) throws IOException {
 		switch (browserType) {
 		case "chrome":
 			driver = initChromeDriver(appURL);
@@ -59,14 +57,16 @@ public class TestBase implements ITest{
 		}
 	}
 
-	private static WebDriver initChromeDriver(String appURL) {
+	private static WebDriver initChromeDriver(String appURL) throws IOException {
 		System.out.println("Launching google chrome with new profile..");
-		System.setProperty("webdriver.chrome.driver", driverPath + "chromedriver");
+		String path = new File(".").getCanonicalPath();
+		System.setProperty("webdriver.chrome.driver",
+				path + IOUtils.DIR_SEPARATOR + DRIVER_DIRECTORY + IOUtils.DIR_SEPARATOR + "chromedriver");
 		System.out.println("Successfully set chrome driver property");
 		WebDriver driver = new ChromeDriver();
 		driver.manage().window().maximize();
 		driver.navigate().to(appURL);
-		System.out.println("AppUrl: "+appURL);
+		System.out.println("AppUrl: " + appURL);
 		return driver;
 	}
 
@@ -94,41 +94,39 @@ public class TestBase implements ITest{
 		driver.quit();
 	}
 
-
 	@Override
 	public String getTestName() {
 		TestDocument testDoc = testDocQueue.poll();
 		return testDoc == null ? "null" : testDoc.testCase;
 	}
 
-
 	private Collection<File> getTestDataFiles(String testDir) throws IOException {
 		String path = new File(".").getCanonicalPath();
 		File directory = new File(path + IOUtils.DIR_SEPARATOR + TEST_DIRECTORY + IOUtils.DIR_SEPARATOR + testDir);
 		Log.info("Looking for test files at {}", directory);
-		if(directory.exists() && directory.isDirectory()) {
+		if (directory.exists() && directory.isDirectory()) {
 			return FileUtils.listFiles(directory, null, true);
 		}
 		throw new SkipException("Invalid test data location. " + directory.getAbsolutePath());
-		
+
 	}
-	
+
 	@DataProvider
 	@JsonDeserialize
 	public Iterator<Object[]> testDataProvider(Method m) throws IOException {
 		Collection<File> testDataFiles = getTestDataFiles(m.getName());
 		Log.info("Found the following testFiles: {}", testDataFiles);
 		ImmutableList.Builder<Object[]> dataBuilder = ImmutableList.builder();
-		for(File testFile : testDataFiles) {
+		for (File testFile : testDataFiles) {
 			try {
-				TestDocument testDocument =  mapper.readValue(testFile, TestDocument.class);
+				TestDocument testDocument = mapper.readValue(testFile, TestDocument.class);
 				testDocQueue.add(testDocument);
 				dataBuilder.add(new Object[] { testDocument });
-				
+
 			} catch (Exception e) {
 				Log.error("", e);
 			}
-			
+
 		}
 		return dataBuilder.build().iterator();
 	}

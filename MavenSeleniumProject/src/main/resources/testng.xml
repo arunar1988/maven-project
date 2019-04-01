@@ -8,7 +8,7 @@
 	<parameter name="browserType" value="chrome" />
 	<parameter name="appURL" value="https://www.trakstar.com/pricing/" />
 
-	<test name="Admin Tests">
+	<test name="TrakstarPricingTests">
 		<classes>
 			<class name="com.trakstar.tests.PricingPageTest" />
 		</classes>

@@ -1,0 +1,5 @@
+{
+		"testCase": "TestIncludeAllPricingComponents_25Employees",
+		"noOfEmployees": 25,
+		"expected_AnnualSubscriptionQuote": "$10,268"
+}

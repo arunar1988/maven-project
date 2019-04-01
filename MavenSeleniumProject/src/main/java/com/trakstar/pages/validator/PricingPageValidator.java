@@ -8,9 +8,8 @@ import org.testng.Assert;
 
 import com.trakstar.pages.PricingPage;
 
-
 public class PricingPageValidator extends PricingPage {
-	
+
 	private static final Logger log = LogManager.getLogger(PricingPageValidator.class);
 
 	public PricingPageValidator(WebDriver driver) {
@@ -63,6 +62,7 @@ public class PricingPageValidator extends PricingPage {
 
 	/**
 	 * Verify actual Annual Price with the expected value
+	 * 
 	 * @param expectedAnnualPrice
 	 */
 	public void verifyAnnualSubscriptionQuote(String expectedAnnualPrice) {

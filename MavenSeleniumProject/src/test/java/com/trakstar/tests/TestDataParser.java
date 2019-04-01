@@ -22,15 +22,14 @@ import com.google.common.collect.ImmutableList;
 import com.trakstar.testdata.model.TestDocument;
 
 public class TestDataParser implements ITest {
-	
+
 	private static ObjectMapper mapper = new ObjectMapper();
 
 	private Queue<TestDocument> testDocQueue = new LinkedList<TestDocument>();
-	
+
 	private static final Logger Log = LogManager.getLogger(TestDataParser.class);
-	
+
 	private static final String BASE_DIRECTORY = "TestData";
-	
 
 	@Override
 	public String getTestName() {
@@ -38,36 +37,36 @@ public class TestDataParser implements ITest {
 		return testDoc == null ? "null" : testDoc.testCase;
 	}
 
-
 	private Collection<File> getTestDataFiles(String testDirectory) throws IOException {
 		String path = new File(".").getCanonicalPath();
-		File directory = new File(path + IOUtils.DIR_SEPARATOR + BASE_DIRECTORY + IOUtils.DIR_SEPARATOR + testDirectory);
+		File directory = new File(
+				path + IOUtils.DIR_SEPARATOR + BASE_DIRECTORY + IOUtils.DIR_SEPARATOR + testDirectory);
 		Log.info("Looking for test files at {}", directory);
-		if(directory.exists() && directory.isDirectory()) {
+		if (directory.exists() && directory.isDirectory()) {
 			return FileUtils.listFiles(directory, null, true);
 		}
 		throw new SkipException("Invalid test data location. " + directory.getAbsolutePath());
-		
+
 	}
-	
+
 	@DataProvider
 	@JsonDeserialize
 	public Iterator<Object[]> testDataProvider(Method m) throws IOException {
-		//String testDir = "testEmployeeManagementSurveyPrice";
+		// String testDir = "testEmployeeManagementSurveyPrice";
 		Collection<File> testDataFiles = getTestDataFiles(m.getName());
-		Log.info("Test Data Directory: "+ m.getName());
+		Log.info("Test Data Directory: " + m.getName());
 		Log.info("Found the following testFiles: {}", testDataFiles);
 		ImmutableList.Builder<Object[]> dataBuilder = ImmutableList.builder();
-		for(File testFile : testDataFiles) {
+		for (File testFile : testDataFiles) {
 			try {
-				TestDocument testDocument =  mapper.readValue(testFile, TestDocument.class);
+				TestDocument testDocument = mapper.readValue(testFile, TestDocument.class);
 				testDocQueue.add(testDocument);
 				dataBuilder.add(new Object[] { testDocument });
-				
+
 			} catch (Exception e) {
 				Log.error("", e);
 			}
-			
+
 		}
 		return dataBuilder.build().iterator();
 	}
@@ -79,16 +78,16 @@ public class TestDataParser implements ITest {
 		Collection<File> testDataFiles = getTestDataFiles(testDir);
 		Log.info("Found the following testFiles: {}", testDataFiles);
 		ImmutableList.Builder<Object[]> dataBuilder = ImmutableList.builder();
-		for(File testFile : testDataFiles) {
+		for (File testFile : testDataFiles) {
 			try {
-				TestDocument testDocument =  mapper.readValue(testFile, TestDocument.class);
+				TestDocument testDocument = mapper.readValue(testFile, TestDocument.class);
 				testDocQueue.add(testDocument);
 				dataBuilder.add(new Object[] { testDocument });
-				
+
 			} catch (Exception e) {
 				Log.error("", e);
 			}
-			
+
 		}
 		return dataBuilder.build().iterator();
 	}
