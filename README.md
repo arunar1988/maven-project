@@ -16,9 +16,12 @@ https://www.ecanarys.com/Blogs/ArticleID/169/How-to-Install-TestNG-framework-Ste
 
 # Run Tests
 Do mvn clean and install prior to running the tests.
+
 Select the Maven eclipse project -> Run as -> Maven Clean
+
 Select the Maven eclipse project -> Run as -> Maven install
 
-Run the TestNG tests
+Run the TestNG tests:
+
 Select the Maven eclipse project --> Run as --> TestNG test
 
